@@ -90,7 +90,7 @@ namespace BotState {
 // ==========================================
 // INTERFAZ DEL MENÚ DEL MOD (POPUP)
 // ==========================================
-class BotMenuPopup : public geode::Popup<> {
+class BotMenuPopup : public geode::Popup {
 protected:
     CCMenuItemToggler* m_botToggler = nullptr;
     CCMenuItemToggler* m_recToggler = nullptr;
@@ -115,7 +115,9 @@ protected:
         updateStatusLabel();
     }
 
-    bool setup() override {
+    bool init() {
+        if (!Popup::init(325.f, 235.f)) return false;
+
         this->setTitle("Human Learning Bot");
 
         auto menu = CCMenu::create();
@@ -249,7 +251,7 @@ protected:
 public:
     static BotMenuPopup* create() {
         auto ret = new BotMenuPopup();
-        if (ret && ret->initAnchored(325.f, 235.f)) {
+        if (ret && ret->init()) {
             ret->autorelease();
             return ret;
         }
@@ -309,8 +311,8 @@ class $modify(BotMainMenuLayer, MenuLayer) {
 // LÓGICA DEL BOT Y GRABACIÓN
 // ==========================================
 class $modify(BotGameLayer, GJBaseGameLayer) {
-    void processCommands(float dt) {
-        GJBaseGameLayer::processCommands(dt);
+    void processCommands(float dt, bool isHalfTick, bool isLastTick) {
+        GJBaseGameLayer::processCommands(dt, isHalfTick, isLastTick);
 
         bool botEnabled = Mod::get()->getSettingValue<bool>("bot-enabled");
         bool recordMode = Mod::get()->getSettingValue<bool>("record-mode");
