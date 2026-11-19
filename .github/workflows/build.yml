@@ -1,0 +1,29 @@
+name: Compilar Mod Geode
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Descargar codigo del mod
+        uses: actions/checkout@v4
+
+      - name: Instalar Geode CLI y SDK
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/geode-sdk/cli/releases/download/v4.0.1/geode-cli-v4.0.1-win.zip" -OutFile "geode-cli.zip"
+          Expand-Archive -Path "geode-cli.zip" -DestinationPath "C:\geode-cli" -Force
+          echo "C:\geode-cli" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          C:\geode-cli\geode.exe sdk install
+
+      - name: Compilar archivo .geode
+        run: geode build
+
+      - name: Guardar mod compilado
+        uses: actions/upload-artifact@v4
+        with:
+          name: HumanLearningBot-mod
+          path: build/*.geode
