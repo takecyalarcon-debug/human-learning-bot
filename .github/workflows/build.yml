@@ -18,9 +18,29 @@ jobs:
           $asset = $release.assets | Where-Object { $_.name -like "*win.zip" } | Select-Object -First 1
           Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "geode-cli.zip"
           Expand-Archive -Path "geode-cli.zip" -DestinationPath "C:\geode-cli" -Force
-          $env:GEODE_SDK = "C:\geode-sdk"
+
+          New-Item -ItemType Directory -Path "C:\gd\geode\mods" -Force | Out-Null
+          New-Item -ItemType File -Path "C:\gd\GeometryDash.exe" -Force | Out-Null
+          New-Item -ItemType File -Path "C:\gd\Geode.dll" -Force | Out-Null
+
+          $geodeCfgDir = "$env:LOCALAPPDATA\Geode"
+          New-Item -ItemType Directory -Path $geodeCfgDir -Force | Out-Null
+          @'
+          {
+            "current-profile": "default",
+            "profiles": {
+              "default": {
+                "gd-path": "C:\\gd\\GeometryDash.exe",
+                "platform": "win"
+              }
+            },
+            "sdk-path": "C:\\geode-sdk"
+          }
+          '@ | Set-Content -Path "$geodeCfgDir\config.json" -Encoding UTF8
+
           echo "C:\geode-cli" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           echo "GEODE_SDK=C:\geode-sdk" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
           C:\geode-cli\geode.exe sdk install
 
       - name: Compilar archivo .geode
