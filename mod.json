@@ -1,0 +1,34 @@
+{
+	"geode": "4.0.0",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074"
+	},
+	"id": "tuusuario.humanbot",
+	"name": "Human Learning Bot",
+	"version": "v1.0.0",
+	"developer": "TuNombre",
+	"description": "Bot con curva de aprendizaje y fallos humanos hasta el intento objetivo.",
+	"settings": {
+		"bot-enabled": {
+			"type": "bool",
+			"name": "Activar Bot",
+			"description": "Ejecuta la macro simulando aprendizaje humano.",
+			"default": false
+		},
+		"record-mode": {
+			"type": "bool",
+			"name": "Modo Grabación",
+			"description": "Graba tus pulsaciones para crear la ruta base del nivel (puedes usar Noclip).",
+			"default": false
+		},
+		"target-attempts": {
+			"type": "int",
+			"name": "Intento Objetivo (N)",
+			"description": "Número exacto de intento en el que el bot se pasará el nivel al 100%.",
+			"default": 35,
+			"min": 1,
+			"max": 10000
+		}
+	}
+}
